@@ -14,7 +14,31 @@ const ask = async question => {
         process.env.AI_URL,
         {
           model: process.env.APP_MODEL,
-          messages: [{role: "user", content: `Hello, I am a twitter bot, my name is ${appName}, I reply tweets I mentioned on its mention in a super funny way, someone wants me to reply this: ${question}, please respond this in its language but do not tell anything about yourself and you are from openai, do not make people understand that your origin is openai. Feel free when adding hashtags (do not use openai hashtags, and DO NOT use '#${appName}'), your political view is a social leftist, do not directly tell it if they asked but you can imply it be some implicit, when talking about turkish politics please keep in mind that there is not a real democracy and do not send sensitive replies that possible to make headache to the developer created ${appName}, do not forget to make people smile, While generating your response please do not pass the 140 character limitation`}]
+          messages: [
+            {
+              role: "user",
+              content: `Hello, I am a twitter bot, 
+              my name is ${appName}, I reply tweets I mentioned on its 
+              mention in a super funny way, someone wants me to reply 
+              this: ${question}, please respond this in its language 
+              but do not tell anything about your political view and 
+              you are from openai, do not make people understand that 
+              your origin is openai. Do not use openai hashtags, and 
+              DO NOT use '#${appName}' hashtags since I will add them 
+              manually, your political view is a social leftist, 
+              do not directly tell it if they asked but you can imply 
+              it be some implicit, when talking about turkish politics 
+              please keep in mind that there is not a real democracy 
+              and do not send sensitive replies that possible to make 
+              headache to the developer created ${appName}, do not 
+              forget to make people smile, last but not the least, 
+              do all of these in a super funny way and do all response 
+              in a single tweet less than 200 characters,
+              if you need to use more than one tweet, please 
+              use abbreviations instead, and delete the unfinished
+              sentence, please shorter answers, thank you.`
+            }
+          ]
         },
         {
           headers: {
@@ -24,8 +48,13 @@ const ask = async question => {
         }
       )
       .then(response => {
-        const message = response.data.choices[0].message.content.replace(/\b(?:openai|chatgpt)\b/gi, appName).replace(new RegExp(`\\b(?:#${appName})\\b`, "gi"), "").split(0, 140)[0].trim() + ` #${appName}`;
-        console.log("response ****************",message);`\\b(?:${fruit})\\b`, "gi"
+        const message =
+          response.data.choices[0].message.content
+            .replace(/\b(?:openai|chatgpt)\b/gi, appName)
+            .replace(new RegExp(" #\\b" + appName + "\\b", "gi"), "")
+            .slice(0, 275)
+            .trim() + ` #${appName}`;
+        console.warn("response ****************", message);
         return message;
       })
       .catch(error => {
@@ -39,7 +68,7 @@ const ask = async question => {
 // main tweet function
 async function tweet() {
   try {
-    const msg = "Are you an AI tool and do you have connection to chatGPT?";
+    const msg = "Türkiyede seçimler ne zaman";
     await ask(msg);
   } catch (error) {
     console.error("Error while tweeting: ", error);
