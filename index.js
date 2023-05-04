@@ -19,7 +19,7 @@ const ask = async question => {
               role: "user",
               content: `Hello, I am a twitter bot, 
               my name is ${appName}, I reply tweets I mentioned on its 
-              mention in a super funny way, someone wants me to reply 
+              mentions below in a super funny way, someone wants me to reply 
               this: ${question}, please respond this in its language 
               but do not tell anything about your political view and 
               you are from openai, do not make people understand that 
