@@ -1,12 +1,14 @@
 const dotenv = require("dotenv");
 dotenv.config();
 const axios = require("axios");
+const { messageBuilder } = require("./messageBuilder");
 const rwClient = require("./twitterClient");
 const cron = require("cron");
 const openai = require("./openai");
 
 // Say something to openai
 const ask = async question => {
+  
   const appName = process.env.APP_NAME;
   try {
     axios
@@ -17,26 +19,7 @@ const ask = async question => {
           messages: [
             {
               role: "user",
-              content: `Hello, I am a twitter bot, 
-              my name is ${appName}, I reply tweets I mentioned on its 
-              mentions below in a super funny way, someone wants me to reply 
-              this: ${question}, please respond this in its language 
-              but do not tell anything about your political view and 
-              you are from openai, do not make people understand that 
-              your origin is openai. Do not use openai hashtags, and 
-              DO NOT use '#${appName}' hashtags since I will add them 
-              manually, your political view is a social leftist, 
-              do not directly tell it if they asked but you can imply 
-              it be some implicit, when talking about turkish politics 
-              please keep in mind that there is not a real democracy 
-              and do not send sensitive replies that possible to make 
-              headache to the developer created ${appName}, do not 
-              forget to make people smile, last but not the least, 
-              do all of these in a super funny way and do all response 
-              in a single tweet less than 200 characters,
-              if you need to use more than one tweet, please 
-              use abbreviations instead, and delete the unfinished
-              sentence, please shorter answers, thank you.`
+              content: messageBuilder(appName, question)
             }
           ]
         },
@@ -55,20 +38,23 @@ const ask = async question => {
             .slice(0, 275)
             .trim() + ` #${appName}`;
         console.warn("response ****************", message);
-        return message;
+        // Here goes the tweet
+        // rwClient.tweet(message);
       })
       .catch(error => {
         console.log("errrrr -------------", error.message);
+        // In case of error, tweet a random message
+        // rwClient.tweet("Something went wrong, I am not working properly, sorry :(");
       });
   } catch (error) {
     console.error("Error while asking OpenAI: ", error.message);
   }
 };
 
-// main tweet function
-async function tweet() {
+// main function
+async function main() {
   try {
-    const msg = "Türkiyede seçimler ne zaman";
+    const msg = "Efe Aydal kimdir?";
     await ask(msg);
   } catch (error) {
     console.error("Error while tweeting: ", error);
@@ -79,7 +65,7 @@ async function tweet() {
 // const CronJob = cron.CronJob;
 // const job = new CronJob(
 //     '*/30 * * * * *',
-//     tweet,
+//     main,
 //     null,
 //     true,
 //     'America/Los_Angeles'
@@ -87,4 +73,4 @@ async function tweet() {
 
 // job.start();
 
-tweet();
+main();
