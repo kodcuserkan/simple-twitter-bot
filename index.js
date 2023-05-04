@@ -54,7 +54,7 @@ const ask = async question => {
 // main function
 async function main() {
   try {
-    const msg = "Efe Aydal kimdir?";
+    const msg = "Twitter botu nedir nasıl çalışır";
     await ask(msg);
   } catch (error) {
     console.error("Error while tweeting: ", error);
