@@ -6,8 +6,9 @@ const client = new TwitterApi({
   appSecret: process.env.TWITTER_CLIENT_SECRET,
   accessToken: process.env.TWITTER_ACCESS_TOKEN,
   accessSecret: process.env.TWITTER_ACCESS_SECRET,
+  bearerToken: `Bearer ${process.env.TWITTER_BEARER_TOKEN}`,
 });
 
 const rwClient = client.readWrite;
 
-module.exports = rwClient;
+module.exports = { rwClient, client };
